@@ -220,14 +220,15 @@
             <h4> <i class="icon icon-key"></i> Change Key</h4>
             <div class="loginform">
                 <div class="messageBox" style="font-size:10px"></div>
-                <form id="changepassword" action="" method="post">
+                <form id="changepassword" action="" method="get">
                     <label for="oldPassword">Current Password</label>
                     <input type="password" id="oldPassword" name="oldPassword" value='' class="form_input required" placeholder="enter current password..." required="required">
                     <label for="newPassword">New Password</label>
                     <input type="password" id="newPassword" name="newPassword" class="form_input required" placeholder="Enter new password..." required="required">
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" class="form_input required" name="confirmPassword" placeholder="Confirm new password..." required="required">
-
+                    <input type="hidden" name="LoggedInStudentId" id="LoggedInStudentId" value="" />
+                    <input type="hidden" name="LoggedInSupervisorId" id="LoggedInSupervisorId" value="" />
                    <input type="submit" name="submit" class="form_submit" id="submit" value="Submit" />
                 </form>
             </div>

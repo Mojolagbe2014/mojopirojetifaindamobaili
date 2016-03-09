@@ -1,7 +1,7 @@
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.cse.projectfinder" version="1.0.0">
   <name>Unilorin Project Finder</name>
   <description>This mobile application  eliminates the problems encountered with manual archive system of keeping academic research report in the University by substituting the manual system with electronic database.</description>
-  <author href="http://ulprojectfinder.byethost4.com" email="info@ulprojectfinder.byethost4.com">Amoo Haruna Babatunde</author>
+  <author href="http://amadovenigeria.net/upf/" email="info@amadovenigeria.net">Amoo Haruna Babatunde</author>
   <content src="index.html"/>
   <preference name="permissions" value="none"/>
   <preference name="orientation" value="default"/>

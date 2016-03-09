@@ -1,5 +1,5 @@
-var siteRoot = 'http://amadovenigeria.net/upf/';
-//var siteRoot = 'http://localhost/testcodes/';
+//var siteRoot = 'http://ulprojectfinder.byethost4.com/';
+var siteRoot = 'http://localhost/testcodes/';
 var restUrl = siteRoot+'REST/';
 var currentPage = $("ul#projectlist").attr('data-end'); //Hold the currentPage
 var category = ""; //Category name
@@ -19,10 +19,12 @@ $(document).ready(function(){
             case 'student': $('.student-enabled').show(); $('a#profile-link').attr('data-popup','.popup-student-profile'); 
                             loadDepartments(); fetchMyDeptSupervisors(); loadStudProfileDetails(); loadMyProjects();fetchProjects(totalNo, offset, searchParam);
                             $('form#changepassword').attr('action', 'student-change-password.php');
+                            $('form#changepassword input#LoggedInStudentId').val(sessionStorage.studentId);
                             break;
             case 'supervisor':  $('.supervisor-enabled').show(); $('a#profile-link').attr('data-popup','.popup-supervisor-profile'); 
                                 loadSuperProfileDetails(); loadMyStudentsProjects();fetchProjects(totalNo, offset, searchParam);
                                 $('form#changepassword').attr('action', 'supervisor-change-password.php');
+                                $('form#changepassword input#LoggedInSupervisorId').val(sessionStorage.supervisorEmail);
                                 break;
             default:            loadDepartments(); fetchProjects(totalNo, offset, searchParam);
                                 break;
@@ -37,8 +39,9 @@ $(document).ready(function(){
         formData.append('register', 'true');
         $.ajax({
             url: restUrl+$(this).attr("action"),
-            type: 'POST',
+            type: 'GET',
             data: formData,
+            dataType:'jsonp',
             cache: false,
             contentType: false,
             async: false,
@@ -60,14 +63,17 @@ $(document).ready(function(){
     $(document).on('submit', "form#changepassword", function(e){ 
         e.stopPropagation();
         e.preventDefault();
-        var formData = new FormData($(this)[0]);
-        formData.append((sessionStorage.loggedUser=='student' ? 'LoggedInStudentId': 'LoggedInSupervisorId'), (sessionStorage.loggedUser=='student' ? sessionStorage.studentId : sessionStorage.supervisorEmail));
+        var formData = $(this).serialize();
+        //var formData = new FormData($(this)[0]);
+        //formData.append((sessionStorage.loggedUser=='student' ? 'LoggedInStudentId': 'LoggedInSupervisorId'), (sessionStorage.loggedUser=='student' ? sessionStorage.studentId : sessionStorage.supervisorEmail));
         $.ajax({
             url: restUrl+$(this).attr("action"),
-            type: 'POST',
-            data: formData,
+            type: 'GET',
+            dataType:'jsonp',
             cache: false,
-            contentType: false,
+            //contentType: false,
+            data: formData,
+            crossDomain: true,
             async: false,
             success : function(data, status) {
                 if(data.status == "1"){
@@ -80,6 +86,18 @@ $(document).ready(function(){
                 else {
                     $("#messageBox, .messageBox").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+data+'</div>');
                 }
+            },
+            error : function(xhr, status) {
+                erroMsg = '';
+                console.log(xhr);
+                if(xhr.status===0){ erroMsg = 'There is a problem connecting to internet. Please review your internet connection.'; }
+                else if(xhr.status===404){ erroMsg = 'Requested page not found.'; }
+                else if(xhr.status===500){ erroMsg = 'Internal Server Error.';}
+                else if(status==='parsererror'){ erroMsg = 'Error. Parsing JSON Request failed.'; }
+                else if(status==='timeout'){  erroMsg = 'Request Time out.';}
+                else { erroMsg = 'Unknow Error.\n'+xhr.responseText;}          
+                $("#messageBox, .messageBox").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+erroMsg+'</div>');
+                $('ul#myprojectslist').append('<input type="button" class="close-popup form_submit" style="background:#3c3c3c" value="Close" />');
             },
             processData: false
         });
@@ -102,12 +120,13 @@ $(document).ready(function(){
     $(document).on('submit', "form#resetpassword", function(e){ 
         e.stopPropagation();
         e.preventDefault();
-        var formData = new FormData($(this)[0]);
+        var formData = $(this).serialize();
         $.ajax({
             url: restUrl+$(this).attr("action"),
-            type: 'POST',
+            type: 'GET',
             data: formData,
             cache: false,
+            dataType:'jsonp',
             contentType: false,
             async: false,
             success : function(data, status) {
@@ -132,11 +151,13 @@ $(document).ready(function(){
         var formData = new FormData($(this)[0]);
         formData.append('author', sessionStorage.studentId);
         formData.append('department', sessionStorage.studentDepartment);
+        
         $.ajax({
             url: restUrl + $(this).attr("action"),
             type: 'POST',
             data: formData,
             cache: false,
+            dataType:'json',
             contentType: false,
             async: false,
             success : function(data, status) {
@@ -162,9 +183,10 @@ $(document).ready(function(){
         formData.append('update', 'true');
         $.ajax({
             url: restUrl+$(this).attr("action"),
-            type: 'POST',
+            type: 'GET',
             data: formData,
             cache: false,
+            dataType:'jsonp',
             contentType: false,
             async: false,
             success : function(data, status) {
@@ -219,7 +241,10 @@ $(document).ready(function(){
         $('ul#myprojectslist').empty();
         $.ajax({
             url: restUrl + "fetch-projects.php",
-            type: 'POST',
+            type: 'GET',
+            dataType:'jsonp',
+            contentType: false,
+            crossDomain: true,
             data: {fetchForMobileStudent:'true', author:sessionStorage.studentId },
             cache: false,
             success : function(data, status) {
@@ -255,7 +280,10 @@ $(document).ready(function(){
     function supervisorLogin($loginRestUrl, formDatas){
         $.ajax({
             url: $loginRestUrl,
-            type: 'POST',
+            type: 'GET',
+            dataType:'jsonp',
+            contentType: false,
+            crossDomain: true,
             data: formDatas,
             cache: false,
             success : function(data, status) {
@@ -290,7 +318,10 @@ $(document).ready(function(){
     function studentLogin($loginRestUrl,formDatas ){
         $.ajax({
             url: $loginRestUrl,
-            type: 'POST',
+            type: 'GET',
+            dataType:'jsonp',
+            contentType: false,
+            crossDomain: true,
             data: formDatas,
             cache: false,
             success : function(data, status) {
@@ -332,7 +363,10 @@ $(document).ready(function(){
         $('#department').empty();
         $.ajax({
             url: restUrl+"fetch-departments.php",
-            type: 'POST',
+            type: 'GET',
+            dataType:'jsonp',
+            contentType: false,
+            crossDomain: true,
             data: {},
             cache: false,
             success : function(data, status) {
@@ -360,6 +394,9 @@ $(document).ready(function(){
         $.ajax({
             url: restUrl+"fetch-projects.php",
             type: 'GET',
+            dataType:'jsonp',
+            contentType: false,
+            crossDomain: true,
             data: {fetchForMobileGuest:true, offset:offset, totalNo:totalNo, searchParam:searchParam},
             cache: false,
             success : function(data, status) {
@@ -385,6 +422,7 @@ $(document).ready(function(){
             },
             error : function(xhr, status) {
                 erroMsg = '';
+                console.log(xhr);
                 if(xhr.status===0){ erroMsg = 'There is a problem connecting to internet. Please review your internet connection.'; }
                 else if(xhr.status===404){ erroMsg = 'Requested page not found.'; }
                 else if(xhr.status===500){ erroMsg = 'Internal Server Error.';}
@@ -399,7 +437,10 @@ $(document).ready(function(){
         $('form#updateform #department').empty();
         $.ajax({
             url: restUrl+"fetch-departments.php",
-            type: 'POST',
+            type: 'GET',
+            dataType:'jsonp',
+            contentType: false,
+            crossDomain: true,
             data: {},
             cache: false,
             success : function(data, status) {
@@ -434,7 +475,10 @@ $(document).ready(function(){
         $('form#form-upload-project #supervisor').empty();
         $.ajax({
             url: restUrl + "fetch-supervisors-by-dept.php",
-            type: 'POST',
+            type: 'GET',
+            dataType:'jsonp',
+            contentType: false,
+            crossDomain: true,
             data: {getThisDeptSup:'true', department: sessionStorage.studentDepartment },
             cache: false,
             success : function(data, status) {
@@ -464,7 +508,10 @@ $(document).ready(function(){
         $('form#updatesuperform #department').empty();
         $.ajax({
             url: restUrl+"fetch-departments.php",
-            type: 'POST',
+            type: 'GET',
+            dataType:'jsonp',
+            contentType: false,
+            crossDomain: true,
             data: {},
             cache: false,
             success : function(data, status) {
@@ -496,7 +543,10 @@ $(document).ready(function(){
     function loadMyStudentsProjects(){
         $.ajax({
             url: restUrl+"fetch-projects.php",
-            type: 'POST',
+            type: 'GET',
+            dataType:'jsonp',
+            contentType: false,
+            crossDomain: true,
             data: {fetchForSupervisor: 'true', supervisor:sessionStorage.supervisorEmail, department:sessionStorage.supervisorDept },
             cache: false,
             success : function(data, status) {
@@ -534,6 +584,9 @@ $(document).ready(function(){
         $.ajax({
             url: restUrl+"manage-projects.php",
             type: 'GET',
+            dataType:'jsonp',
+            contentType: false,
+            crossDomain: true,
             data: {approveProject: 'true', id:projectId, status:status},
             cache: false,
             success : function(data, status) {
@@ -551,7 +604,10 @@ $(document).ready(function(){
     function deleteThisProject(projectId, projectFile){
         $.ajax({
             url: restUrl+"manage-projects.php",
-            type: 'POST',
+            type: 'GET',
+            dataType:'jsonp',
+            contentType: false,
+            crossDomain: true,
             data: {deleteProject: 'true', id:projectId, supervisor:sessionStorage.supervisorEmail, projectFile:projectFile},
             cache: false,
             success : function(data, status) {
