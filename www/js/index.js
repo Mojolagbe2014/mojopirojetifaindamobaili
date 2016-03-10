@@ -86,8 +86,8 @@ $(document).ready(function(){
         return false;
     });
     $(document).on('click', ".briefcase-icon a, a#allProjectsLink, a.allProjectsLink", function(){ fetchProjects(totalNo, offset, searchParam); });
-    $(document).on('click', "a.downloadLink", function(){ window.location=$(this).attr('href'); });
-     $(document).on('keyup', "input#customSearch", function(){ fetchProjects(totalNo, offset, $("input#customSearch").val()); });
+    $(document).on('click', ".downloadLink", function(){ downloadFile($(this).attr('data-href')); });
+    $(document).on('keyup', "input#customSearch", function(){ fetchProjects(totalNo, offset, $("input#customSearch").val()); });
 
     $("form#LoginForm").submit(function(e){ 
         e.stopPropagation();
@@ -196,7 +196,7 @@ $(document).ready(function(){
     $(document).on("click", "span#next-projects", function(){ swipeLeftHandler(); });
     $(document).on("click", "span#prev-projects", function(){ swipeRightHandler(); });
     $(document).on({
-        ajaxStart: function() { $('.messageBox').html('<div style="text-align:center;"><img src="images/ajax-loader.gif" id="ajaxLoader" /></div>'); },
+        ajaxStart: function() { showLoadingImage('.messageBox, #messageBox'); },
         ajaxStop: function() { $('img#ajaxLoader').hide();}    
     });
     
@@ -214,7 +214,7 @@ $(document).ready(function(){
             fetchProjects(totalNo, (currentPage - 1) * totalNo, $("input#customSearch").val());
         }
     }
-    
+    function showLoadingImage(selector){$(selector).html('<div style="text-align:center;"><img src="images/ajax-loader.gif" id="ajaxLoader" /></div>');}
     function loadMyProjects(){
         $('ul#myprojectslist').empty();
         $.ajax({
@@ -233,7 +233,7 @@ $(document).ready(function(){
                         else if(item.fileType == "pdf"){ src = "images/icons/pdf.jpg"; }
                         else{ src = "images/icons/blank.jpg"; }
                         projectFile = siteRoot+'project/'+item.projectFile;
-                        $('ul#myprojectslist').append('<li><div class="feat_small_icon"><img src="'+src+'" alt="" title="" /></div><div class="feat_small_details"><h4>'+item.title+'</h4><div style="padding:5px 0px 5px 0px"><strong style="font-weight:bold;">Category:</strong> '+item.category+' <br/><strong style="font-weight:bold;">Supervisor:</strong> '+item.supervisor+' <br/><strong style="font-weight:bold;">Date Added:</strong> '+item.dateUploaded+' <br/><strong style="font-weight:bold;">Year:</strong> '+item.year+' <br/><strong style="font-weight:bold;">Status:</strong> '+((item.status==1) ? '<b class="success"><i class="icon icon-check"></i> Approved</b>' : '<b class="warning"><i class="icon icon-check-empty"></i> Pending</b>')+' </div><div class="hidden">These</div><a href="'+projectFile+'" class="button_small downloadLink">Download</a></div> </li> ');
+                        $('ul#myprojectslist').append('<li><div class="feat_small_icon"><img src="'+src+'" alt="" title="" /></div><div class="feat_small_details"><h4>'+item.title+'</h4><div style="padding:5px 0px 5px 0px"><strong style="font-weight:bold;">Category:</strong> '+item.category+' <br/><strong style="font-weight:bold;">Supervisor:</strong> '+item.supervisor+' <br/><strong style="font-weight:bold;">Date Added:</strong> '+item.dateUploaded+' <br/><strong style="font-weight:bold;">Year:</strong> '+item.year+' <br/><strong style="font-weight:bold;">Status:</strong> '+((item.status==1) ? '<b class="success"><i class="icon icon-check"></i> Approved</b>' : '<b class="warning"><i class="icon icon-check-empty"></i> Pending</b>')+' </div><div class="hidden">These</div><a data-href="'+projectFile+'" class="external button_small downloadLink">Download</a></div> </li> ');
                     });
                 }
                 else{ $("#messageBox, .messageBox").html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'+data+'</div>'); }
@@ -376,7 +376,7 @@ $(document).ready(function(){
                         else if(item.fileType == "pdf"){ src = "images/icons/pdf.jpg"; }
                         else{ src = "images/icons/blank.jpg"; }
                         projectFile = siteRoot+'project/'+item.projectFile;
-                        $('#projectlist').append('<li><div class="feat_small_icon"><img src="'+src+'" alt="" title="" /></div><div class="feat_small_details"><h4>'+item.title+'</h4><div>'+item.abstract.substr(0, 60)+' ..</div><div style="padding:5px 0px 5px 0px"><strong style="font-weight:bold;">Category:</strong> '+item.category+' <br/><strong style="font-weight:bold;">Year:</strong> '+item.year+' </div><div class="hidden">These</div><a href="'+projectFile+'" class="button_small downloadLink">Download</a></div> </li> ');
+                        $('#projectlist').append('<li><div class="feat_small_icon"><img src="'+src+'" alt="" title="" /></div><div class="feat_small_details"><h4>'+item.title+'</h4><div>'+item.abstract.substr(0, 60)+' ..</div><div style="padding:5px 0px 5px 0px"><strong style="font-weight:bold;">Category:</strong> '+item.category+' <br/><strong style="font-weight:bold;">Year:</strong> '+item.year+' </div><div class="hidden">These</div><button data-href="'+projectFile+'" class="button active downloadLink">Download</button></div> </li> ');
                     });
                 }
                 else{ 
@@ -508,7 +508,7 @@ $(document).ready(function(){
                         else if(item.fileType == "pdf"){ src = "images/icons/pdf.jpg"; }
                         else{ src = "images/icons/blank.jpg"; }
                         projectFile = siteRoot+'project/'+item.projectFile;
-                        $('ul#approveprojectslist').append('<li><div class="feat_small_icon"><img src="'+src+'" alt="" title="" /></div><div class="feat_small_details"><h4>'+item.title+'</h4><div style="padding:5px 0px 5px 0px"><strong style="font-weight:bold;">Category:</strong> '+item.category+' <br/><strong style="font-weight:bold;">Student:</strong> '+item.author+' <br/><strong style="font-weight:bold;">Date Uploaded:</strong> '+item.dateUploaded+' <br/><strong style="font-weight:bold;">Project Year:</strong> '+item.year+' <br/><strong style="font-weight:bold;">Actions:</strong> '+item.actionLink+' </div><div class="hidden">These</div><br/><a href="'+projectFile+'" class="button_small downloadLink">Download</a></div> </li> ');
+                        $('ul#approveprojectslist').append('<li><div class="feat_small_icon"><img src="'+src+'" alt="" title="" /></div><div class="feat_small_details"><h4>'+item.title+'</h4><div style="padding:5px 0px 5px 0px"><strong style="font-weight:bold;">Category:</strong> '+item.category+' <br/><strong style="font-weight:bold;">Student:</strong> '+item.author+' <br/><strong style="font-weight:bold;">Date Uploaded:</strong> '+item.dateUploaded+' <br/><strong style="font-weight:bold;">Project Year:</strong> '+item.year+' <br/><strong style="font-weight:bold;">Actions:</strong> '+item.actionLink+' </div><div class="hidden">These</div><br/><a data-href="'+projectFile+'" class="external button_small downloadLink">Download</a></div> </li> ');
                     });
                 }
                 else {
@@ -569,4 +569,31 @@ $(document).ready(function(){
             }
         });
     } 
+    
+    function downloadFile(fileUrl){
+        //var re = /(?:\.([^.]+))?$/;
+        //var ext = re.exec(fileUrl)[1];
+        showLoadingImage('.messageBox, #messageBox');
+        $('ul#projectlist').slideToggle('slow');
+        $('.messageBox, #messageBox').append('<h1 id="appendedMsg" style="text-align:center">Downloading.... </h1>');
+        var savedFile =  fileUrl.split('/').pop();
+        
+        var fileTransfer = new FileTransfer();
+        var uri = encodeURI(fileUrl);
+        var filePath= "/sdcard/"+savedFile;
+        fileTransfer.download(uri,filePath,
+        function(entry) {
+            alert("Download complete! File location: " + entry.toURI());
+            $('ul#projectlist').slideToggle('slow');
+            $('h1#appendedMsg').hide(); $('.messageBox, #messageBox').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button> Download complete! File location: <a href="'+entry.toURI()+'" class="external">' + entry.toURI()+'</a></div>');
+        },
+        function(error) {
+            var errorMsg = 'Download error source: '+ error.source+' \n Download error target ' + error.target+' \n File Transfer error code: ' + error.code;
+            alert(errorMsg);
+            
+            $('ul#projectlist').slideToggle('slow');
+            $('h1#appendedMsg').hide(); $('.messageBox, #messageBox').html('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button> Download Failed:' + errorMsg+'</div>');
+        }
+        );
+    }
 });

@@ -61,3 +61,4 @@ table {
 .success{ color: #00d449;}
 .error { color: #ff3b30}
 .hidden {display:none}
+div.messageBox div.alert, div#messageBox div.alert{font-size:14px}

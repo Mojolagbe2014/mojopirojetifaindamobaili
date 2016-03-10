@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="style.css">
 <link type="text/css" rel="stylesheet" href="css/swipebox.css" />
 <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700,900' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="cordova.js"></script>
 </head>
 <body id="mobile_wrap">
 
@@ -262,12 +263,12 @@
           <h4>Social Share</h4>
           <p>Share this app amongst your friends.</p>
           <ul class="social_share">
-          <li><a href="#"><i class="icon icon-twitter-sign icon-5x"></i></a></li>
-          <li><a href="#"><i class="icon icon-facebook-sign icon-5x"></i></a></li>
-          <li><a href="#"><i class="icon icon-google-plus-sign icon-5x"></i></a></li>
-          <li><a href="#"><i class="icon icon-dribbble icon-5x"></i></a></li>
-          <li><a href="#"><i class="icon icon-linkedin-sign icon-5x"></i></a></li>
-          <li><a href="#"><i class="icon icon-pinterest-sign icon-5x"></i></a></li>
+          <li><button onclick="window.plugins.socialsharing.shareViaTwitter('Download Project Finder app for android and get copies of unilorin past projects easily.', null, 'https://play.google.com')"><a href="#"><i class="icon icon-twitter-sign icon-5x"></i></a></button></li>
+          <li><button onclick="window.plugins.socialsharing.shareViaFacebookWithPasteMessageHint('Download Project Finder app for android and get copies of unilorin past projects easily. https://play.google.com', null, null, 'Paste it!', function() {console.log('share ok')}, function(errormsg){alert(errormsg)})"><a href="#"><i class="icon icon-facebook-sign icon-5x"></i></a></button></li>
+          <li><button onclick="window.plugins.socialsharing.share('Download Project Finder app for android and get copies of unilorin past projects easily.', null, null, 'https://play.google.com')"><a href="#"><i class="icon icon-google-plus-sign icon-5x"></i></a></button></li>
+          <li><button onclick="window.plugins.socialsharing.share('Download Project Finder app for android and get copies of unilorin past projects easily.', null, null, 'https://play.google.com')"><a href="#"><i class="icon icon-dribbble icon-5x"></i></a></button></li>
+          <li><button onclick="window.plugins.socialsharing.share('Download Project Finder app for android and get copies of unilorin past projects easily.', null, null, 'https://play.google.com')"><a href="#"><i class="icon icon-linkedin-sign icon-5x"></i></a></button></li>
+          <li><button onclick="window.plugins.socialsharing.share('Download Project Finder app for android and get copies of unilorin past projects easily.', null, null, 'https://play.google.com')"><a href="#"><i class="icon icon-pinterest-sign icon-5x"></i></a></button></li>
           </ul>
           <div class="close_popup_button"><a href="#" class="close-popup">Close</a></div>
         </div>
